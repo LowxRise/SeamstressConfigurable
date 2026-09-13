@@ -9,3 +9,5 @@ Changes apply to the next relevant hit, shot or bleed tick, without restarting. 
 For multiplayer, install it on every player's profile and use matching settings. Original skill descriptions may still show the original values.
 
 Import the ZIP through r2modman's Settings > Profile > Import local mod.
+
+Icon taken from the thumbnail of [Magicaroo's Seamstress video](https://www.youtube.com/shorts/3rjnOR0AHQs).
