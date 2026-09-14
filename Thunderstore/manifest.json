@@ -1,8 +1,8 @@
 {
   "name": "SeamstressConfigurable",
-  "version_number": "1.1.0",
+  "version_number": "1.2.0",
   "website_url": "https://github.com/LowxRise/SeamstressConfigurable",
-  "description": "Configure both primaries, both secondaries and Skewer damage, plus lifesteal, Retaliate and Skewer health cost. Designed to coexist with SeamstressVariant.",
+  "description": "Homing Symbiotic scissors for Skewer, still in the special slot. Configure primary, secondary and Skewer damage, lifesteal, Retaliate and health cost.",
   "dependencies": [
     "bbepis-BepInExPack-5.4.2113",
     "Rune580-Risk_Of_Options-2.8.5",

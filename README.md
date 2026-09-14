@@ -1,6 +1,6 @@
-Configure damage for both primary skills, both secondary skills and Skewer in Risk of Options, alongside the existing lifesteal and health-cost settings.
+Skewer's Symbiotic scissors now track enemies in flight. Skewer stays in the special slot, with its usual sticking and pickup slash. Configure damage for both primaries, both secondaries and Skewer in Risk of Options, along with lifesteal and health costs.
 
-The new damage sliders use 0-2000% of base damage, with Seamstress's original defaults:
+Damage sliders use 0-2000% of base damage, with Seamstress's original defaults:
 
 - Trim: 120% claw hits, 150% on the third hit. Separate scissor-hit settings for normal and third hits, both 200%.
 - Flurry: 140% claw hits and 200% scissor hits, set separately.
@@ -13,7 +13,9 @@ The earlier settings are unchanged: It Hungers lifesteal is 1-25% (default 15%),
 
 Changes apply to the next attack or damage calculation without restarting. Original skill tooltips can still show the original values.
 
-Requires Seamstress and Risk of Options. Designed to coexist with SeamstressVariant: it is optional, and its separate reworked skills are left untouched. Checked against Seamstress 1.6.10 and the Variant's source; in-game compatibility still needs testing.
+Tracking looks for visible enemies within 60 metres in front of the scissors and stops steering when they stick to an enemy or the ground. Shots without a target still fly normally. The original secondary skills and skill slots are unchanged.
+
+Requires the original Seamstress mod and Risk of Options, plus BepInEx. Checked against Seamstress 1.6.10; this update still needs an in-game test.
 
 For multiplayer, install the same version on every player's profile and use matching settings. Import the ZIP through r2modman's Settings > Profile > Import local mod.
 

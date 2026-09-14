@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <R2ModmanProfile Condition="'$(R2ModmanProfile)' == ''">Singleplayer</R2ModmanProfile>
     <ProfilePath>$(APPDATA)\r2modmanPlus-local\RiskOfRain2\profiles\$(R2ModmanProfile)</ProfilePath>
   </PropertyGroup>

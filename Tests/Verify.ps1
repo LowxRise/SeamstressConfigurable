@@ -62,6 +62,23 @@ $lifesteal = Method $seamstress 'SeamstressMod.Seamstress.Components.SeamstressB
 Check (@($lifesteal.Body.Instructions | Where-Object { $_.OpCode.Name -eq 'ldsfld' -and $_.Operand.Name -eq 'passiveLifeSteal' }).Count -eq 1) 'Existing lifesteal hook'
 $skewer = Method $seamstress 'SeamstressMod.Seamstress.SkillStates.FireScissor' 'OnEnter'
 Check (@($skewer.Body.Instructions | Where-Object { $_.OpCode.Name -eq 'ldc.r4' -and [Math]::Abs($_.Operand - 0.15) -lt 0.000001 }).Count -eq 1) 'Existing Skewer health-cost hook'
+$sticking = Method $seamstress 'SeamstressMod.Seamstress.Components.ScissorImpact' 'TrySticking'
+Check ($sticking.ReturnType.FullName -eq 'System.Boolean' -and $sticking.Parameters.Count -eq 2) 'Tracking stop hook matches accepted sticking result'
+Check ($sticking.Parameters[0].ParameterType.FullName -eq 'UnityEngine.Collider' -and $sticking.Parameters[1].ParameterType.FullName -eq 'UnityEngine.Vector3') 'Tracking sticking parameters'
+$launch = Method $game 'RoR2.Projectile.ProjectileController' 'Start'
+Check ($launch.ReturnType.FullName -eq 'System.Void' -and $launch.Parameters.Count -eq 0) 'Tracking launch hook exists'
+$tracking = Method $addon 'SeamstressConfigurable.SkewerTracking' 'TrackEnemies'
+foreach ($guard in @('get_active', 'get_isPrediction', 'GetComponent')) {
+    Check (@($tracking.Body.Instructions | Where-Object { $_.Operand.Name -eq $guard }).Count -gt 0) "Tracking launch guard: $guard"
+}
+foreach ($setting in @(@('lookRange', 60), @('lookCone', 60), @('rotationSpeed', 250))) {
+    $writes = @($tracking.Body.Instructions | Where-Object { $_.OpCode.Name -eq 'stfld' -and $_.Operand.Name -eq $setting[0] })
+    Check ($writes.Count -eq 1 -and $writes[0].Previous.Operand -eq $setting[1]) "Tracking setting: $($setting[0])"
+}
+Check (@($tracking.Body.Instructions | Where-Object { $_.OpCode.Name -eq 'stfld' -and $_.Operand.Name -in @('desiredForwardSpeed', 'blastDamageCoefficient', 'skillFamily', 'activationState') }).Count -eq 0) 'Tracking leaves projectile speed, damage and skill slots alone'
+$landing = Method $addon 'SeamstressConfigurable.SkewerTracking' 'StopAfterLanding'
+Check (@($landing.Body.Instructions | Where-Object { $_.Operand.Name -eq 'set_enabled' -and $_.Previous.OpCode.Name -eq 'ldc.i4.0' }).Count -eq 1) 'Accepted landing disables steering'
+Check (@($addon.MainModule.AssemblyReferences | Where-Object Name -like '*Variant*').Count -eq 0) 'No extra survivor assembly dependency'
 foreach ($member in $addon.MainModule.GetMemberReferences()) {
     if ($member.DeclaringType.Scope.Name -ne 'RoR2') { continue }
     if ($member -is [Mono.Cecil.MethodReference] -or $member -is [Mono.Cecil.FieldReference]) {
@@ -71,6 +88,8 @@ foreach ($member in $addon.MainModule.GetMemberReferences()) {
 }
 $plugin = $addon.MainModule.GetType('SeamstressConfigurable.Plugin')
 $pluginVersion = ($plugin.CustomAttributes | Where-Object { $_.AttributeType.Name -eq 'BepInPlugin' }).ConstructorArguments[2].Value
+$dependencies = @($plugin.CustomAttributes | Where-Object { $_.AttributeType.Name -eq 'BepInDependency' } | ForEach-Object { $_.ConstructorArguments[0].Value })
+Check ($dependencies.Count -eq 2 -and 'com.kenko.Seamstress' -in $dependencies -and 'com.rune580.riskofoptions' -in $dependencies) 'Plugin requires only Seamstress and Risk of Options'
 $manifest = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $project 'Thunderstore\manifest.json') | ConvertFrom-Json
 Check ($manifest.version_number -eq $pluginVersion -and $addon.Name.Version.ToString(3) -eq $pluginVersion) 'Manifest, plugin and assembly versions agree'
 $zip = [IO.Compression.ZipFile]::OpenRead((Join-Path $project "SeamstressConfigurable-$pluginVersion.zip"))
