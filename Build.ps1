@@ -35,7 +35,8 @@ if (-not $NoBuild) {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot "bin\Release\netstandard2.1\$name.dll") -Destination $destination
 }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'README.md') -Destination (Join-Path $package 'README.md')
-$files = @('manifest.json', 'README.md', 'icon.png', "plugins/$name/$name.dll")
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'CHANGELOG.md') -Destination (Join-Path $package 'CHANGELOG.md')
+$files = @('manifest.json', 'README.md', 'CHANGELOG.md', 'icon.png', "plugins/$name/$name.dll")
 foreach ($relative in $files) {
     if (-not (Test-Path -LiteralPath (Join-Path $package $relative))) { throw "Missing package file: $relative" }
 }

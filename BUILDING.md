@@ -8,4 +8,6 @@ Use -Profile "Your profile name" to select a different r2modman profile. NuGet m
 
 The project includes its own helper code. Game, loader and dependency DLLs are referenced locally or through compile-time packages; they are not included in this repository.
 
-The ZIP is created locally and ignored by Git. Build.ps1 checks the manifest and icon, then packages only the README, manifest, icon and this mod's DLL. -NoBuild repackages the DLL already in Thunderstore/plugins.
+The ZIP is created locally and ignored by Git. Build.ps1 checks the manifest and icon, then packages only the README, changelog, manifest, icon and this mod's DLL. -NoBuild repackages the DLL already in Thunderstore/plugins.
+
+After building, run Tests/Verify.ps1 with -ManagedPath pointing to the game's Risk of Rain 2_Data/Managed folder. It checks the installed Seamstress damage-read patterns, public game API references and package contents without launching the game. These static checks do not replace an in-game test.

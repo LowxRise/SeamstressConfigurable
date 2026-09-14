@@ -11,9 +11,10 @@ using RoR2;
 
 namespace SeamstressConfigurable
 {
-    [BepInPlugin(Guid, Name, "1.0.0")]
+    [BepInPlugin(Guid, Name, "1.1.0")]
     [BepInDependency("com.kenko.Seamstress")]
     [BepInDependency("com.rune580.riskofoptions")]
+    [BepInDependency("com.levinter.SeamstressVariant", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class Plugin : BaseUnityPlugin
     {
         public const string Guid = "com.youssef.SeamstressConfigurable";
@@ -59,9 +60,14 @@ namespace SeamstressConfigurable
                 harmony.UnpatchSelf();
                 Logger.LogError($"Seamstress tweaks were not applied. The installed Seamstress version may have changed.\n{exception}");
             }
+            DamageSettings.Install(Config, Logger);
         }
 
-        private void OnDestroy() => harmony.UnpatchSelf();
+        private void OnDestroy()
+        {
+            DamageSettings.Uninstall();
+            harmony.UnpatchSelf();
+        }
 
         private static float LifestealFraction() => lifesteal.Value / 100f;
         private static float SkewerFraction() => skewerCost.Value / 100f;
