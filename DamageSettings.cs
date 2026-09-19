@@ -86,7 +86,7 @@ namespace SeamstressConfigurable
             if (!(field?.GetValue(null) is ConfigEntry<float> original))
                 throw new MissingFieldException(ConfigType, fieldName);
             int vanilla = (int)Math.Round((float)original.DefaultValue * 100f);
-            values[index] = TweakSettings.Slider(config, section, name, vanilla, 0, Math.Max(2000, vanilla),
+            values[index] = TweakSettings.Slider(config, section, name, vanilla, 0, Math.Max(1000, vanilla),
                 description + " Uses percent of base damage, not a bonus percent. Applies to the next attack or damage calculation.", Plugin.Guid, Plugin.Name);
         }
 

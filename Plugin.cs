@@ -7,11 +7,12 @@ using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
 using LocalTweaks;
+using RiskOfOptions;
 using RoR2;
 
 namespace SeamstressConfigurable
 {
-    [BepInPlugin(Guid, Name, "1.2.0")]
+    [BepInPlugin(Guid, Name, "1.3.0")]
     [BepInDependency("com.kenko.Seamstress")]
     [BepInDependency("com.rune580.riskofoptions")]
     public sealed class Plugin : BaseUnityPlugin
@@ -28,6 +29,10 @@ namespace SeamstressConfigurable
 
         private void Awake()
         {
+            ModSettingsManager.SetModDescription("Tune Seamstress's attacks, health costs and lifesteal, with homing Skewer scissors and a visible target marker.", Guid, Name);
+            var icon = SettingsIcon.Load("SeamstressConfigurable.SettingsIcon.png");
+            if (icon)
+                ModSettingsManager.SetModIcon(icon, Guid, Name);
             lifesteal = TweakSettings.Slider(Config, "It Hungers", "Lifesteal percent", 15, 1, 25,
                 "Maximum lifesteal coefficient. Still scales with missing health and the hit's proc coefficient. Applies immediately.", Guid, Name);
             cleanRetaliate = TweakSettings.Checkbox(Config, "Retaliate", "No self bleed or needle gain", true,

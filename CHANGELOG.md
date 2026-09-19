@@ -1,3 +1,11 @@
+1.3.0
+
+- Added the package icon to the Risk of Options page.
+- Added Seamstress's target circle while Skewer is selected.
+- Made the target circle and homing scissors use the same enemy selection.
+- Updated the hooks for the newer Seamstress code while keeping support for the previous release.
+- Lowered the upper limit of every damage slider from 2000% to 1000%.
+
 1.2.0
 
 - Added enemy tracking to Skewer's Symbiotic scissors during flight.

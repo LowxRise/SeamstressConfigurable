@@ -76,6 +76,14 @@ foreach ($setting in @(@('lookRange', 60), @('lookCone', 60), @('rotationSpeed',
     Check ($writes.Count -eq 1 -and $writes[0].Previous.Operand -eq $setting[1]) "Tracking setting: $($setting[0])"
 }
 Check (@($tracking.Body.Instructions | Where-Object { $_.OpCode.Name -eq 'stfld' -and $_.Operand.Name -in @('desiredForwardSpeed', 'blastDamageCoefficient', 'skillFamily', 'activationState') }).Count -eq 0) 'Tracking leaves projectile speed, damage and skill slots alone'
+$tracker = $addon.MainModule.GetType('SeamstressConfigurable.SkewerTargetTracker')
+Check ($null -ne $tracker) 'Skewer target tracker is included'
+$findTarget = Method $addon 'SeamstressConfigurable.SkewerTargetTracker' 'FindTarget'
+$distanceWrites = @($findTarget.Body.Instructions | Where-Object { $_.OpCode.Name -eq 'stfld' -and $_.Operand.Name -eq 'maxDistanceFilter' })
+Check ($distanceWrites.Count -eq 1 -and $distanceWrites[0].Previous.Operand -eq 60) 'Target marker setting: maxDistanceFilter'
+$angleWrites = @($findTarget.Body.Instructions | Where-Object { $_.OpCode.Name -eq 'callvirt' -and $_.Operand.Name -eq 'set_maxAngleFilter' })
+Check ($angleWrites.Count -eq 1 -and $angleWrites[0].Previous.Operand -eq 30) 'Target marker setting: maxAngleFilter'
+Check (@($tracker.Fields | Where-Object { $_.Name -eq 'indicator' -and $_.FieldType.FullName -eq 'RoR2.Indicator' }).Count -eq 1) 'Target marker uses the game indicator'
 $landing = Method $addon 'SeamstressConfigurable.SkewerTracking' 'StopAfterLanding'
 Check (@($landing.Body.Instructions | Where-Object { $_.Operand.Name -eq 'set_enabled' -and $_.Previous.OpCode.Name -eq 'ldc.i4.0' }).Count -eq 1) 'Accepted landing disables steering'
 Check (@($addon.MainModule.AssemblyReferences | Where-Object Name -like '*Variant*').Count -eq 0) 'No extra survivor assembly dependency'
